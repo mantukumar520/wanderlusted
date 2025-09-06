@@ -26,7 +26,7 @@ const reviewRoutes = require("./routes/review");
 const userouter = require("./routes/user");
 
 // ✅ Set DB URL from environment or fallback to local
-const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
+const dbUrl = process.env.ATLASDB_URL;
 
 
 main()
@@ -89,7 +89,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.currentUser = req.user;
+  res.locals.currentUser = req.user || null;
   next();
 });
 
