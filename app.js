@@ -28,6 +28,7 @@ const userouter = require("./routes/user");
 // ✅ Set DB URL from environment or fallback to local
 const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 
+
 main()
   .then(() => console.log("✅ Connected to DB"))
   .catch((err) => console.log("❌ DB Connection Error:", err));
@@ -91,6 +92,7 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 });
+
 
 // Routes
 app.use("/", userouter);
