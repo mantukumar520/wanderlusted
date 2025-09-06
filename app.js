@@ -1,10 +1,8 @@
-if(process.env.NODE_ENV != "production") {
-  require('dotenv').config();
+if (process.env.NODE_ENV != "production") {
+  require("dotenv").config();
 }
 // require("dotenv").config();
-// console.log(process.env.CLOUD_NAME); 
-
-
+// console.log(process.env.CLOUD_NAME);
 
 const express = require("express");
 const app = express();
@@ -19,21 +17,17 @@ const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review");
 app.use(methodOverride("_method"));
 const session = require("express-session");
-const MongoStore = require('connect-mongo');
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 
-
 const listingsrouter = require("./routes/listing.js");
 const reviewRoutes = require("./routes/review");
 const userouter = require("./routes/user.js");
 
-
 const dbUrl = process.env.ATLASDB_URL;
-
-
 
 main()
   .then(() => console.log("Connected to DB"))
@@ -50,9 +44,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
-
 const store = MongoStore.create({
-  mongoUrl: dbUrl,
+ mongoUrl: process.env.ATLASDB_URL,
   crypto: {
     secret: process.env.SECRET,
   },
@@ -64,15 +57,15 @@ store.on("error", () => {
 });
 
 const sessionOptions = {
-    store,
-    secret: process.env.SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-    },
+  store,
+  secret: process.env.SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+  },
 };
 
 app.use(session(sessionOptions));
@@ -86,19 +79,17 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
-    res.locals.success = req.flash("success");
-    res.locals.error = req.flash("error");
-    res.locals.currentUser = req.user;
-    res.locals.currUser = req.user;
-    console.log( res.locals.success);
-    next();
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.currentUser = req.user;
+  res.locals.currUser = req.user;
+  console.log(res.locals.success);
+  next();
 });
-
 
 app.use("/", userouter);
 app.use("/listings", listingsrouter);
 app.use("/listings/:id/reviews", reviewRoutes);
-
 
 //middleware
 app.use((err, req, res, next) => {
@@ -109,5 +100,3 @@ app.use((err, req, res, next) => {
 app.listen(8080, () => {
   console.log("Server is listening on port 8080");
 });
-
-
