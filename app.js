@@ -26,7 +26,7 @@ const reviewRoutes = require("./routes/review");
 const userouter = require("./routes/user");
 
 // ✅ Set DB URL from environment or fallback to local
-const dbUrl = process.env.ATLASDB_URL;
+const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/wanderlust";
 console.log("Mongo URL:", dbUrl);
 
 
